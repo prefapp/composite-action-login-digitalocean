@@ -19,9 +19,9 @@ runs:
           core.setSecret(process.env.authToken);
 
     - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ inputs.cluster-name }}
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ inputs.cluster-name }}
     
     - name: Set up helmfile
       run: |

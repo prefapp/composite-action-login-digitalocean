@@ -1,0 +1,38 @@
+name: 'Login Digital Ocean'
+description: 'Log into digital ocean and set context for a kubernetes deployment using helmfile'
+inputs:
+  cluster-name:  
+    required: true
+  auth-token:
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Hide credentials
+      uses: actions/github-script@v4
+      env:
+        authToken: ${{ inputs.auth-token }}
+      with:
+        result-encoding: json
+        script: |
+          core.setSecret(process.env.authToken);
+
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ inputs.auth-token }}
+    
+    - name: Set up helmfile
+      shell: bash
+      run: |
+            doctl registry login --expiry-seconds 120
+            PAT=`docker run --rm -v ${HOME}/.docker:/data stedolan/jq \
+              '.auths["registry.digitalocean.com"].auth' /data/config.json | sed 's/\"//g'  | base64 -d`
+            export HELM_EXPERIMENTAL_OCI=1
+            helm registry login --username=`echo $PAT` --password=`echo $PAT` registry.digitalocean.com
+            
+    - name: Set up kubectl
+      shell: bash
+      run: |        
+            doctl kubernetes cluster kubeconfig save  ${{ inputs.cluster-name }}

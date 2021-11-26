@@ -5,7 +5,7 @@ This repository stores a [composite action](https://github.blog/changelog/2021-0
 You can use this composite action as a step in your workflow like:
 ```
  - id: aws-login
-        if: ${{ steps.set-cloud-info.outputs.result == 'aws' }}
+        if: ${{ steps.set-cloud-info.outputs.result == 'do' }}
         uses: prefapp/composite-action-login-digitalocean@v1
         with:
             cluster-name: ${{ env.CLUSTER_NAME }}

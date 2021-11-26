@@ -24,6 +24,7 @@ runs:
         token: ${{ inputs.cluster-name }}
     
     - name: Set up helmfile
+      shell: bash
       run: |
             doctl registry login --expiry-seconds 120
             PAT=`docker run --rm -v ${HOME}/.docker:/data stedolan/jq \
@@ -32,5 +33,6 @@ runs:
             helm registry login --username=`echo $PAT` --password=`echo $PAT` registry.digitalocean.com
             
     - name: Set up kubectl
+      shell: bash
       run: |        
             doctl kubernetes cluster kubeconfig save  ${{ env.CLUSTER_NAME }}

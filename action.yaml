@@ -21,7 +21,7 @@ runs:
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
       with:
-        token: ${{ inputs.cluster-name }}
+        token: ${{ inputs.auth-token }}
     
     - name: Set up helmfile
       shell: bash
@@ -35,4 +35,4 @@ runs:
     - name: Set up kubectl
       shell: bash
       run: |        
-            doctl kubernetes cluster kubeconfig save  ${{ env.CLUSTER_NAME }}
+            doctl kubernetes cluster kubeconfig save  ${{ inputs.cluster-name }}
